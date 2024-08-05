@@ -1,10 +1,4 @@
 /* CSS for FlashcardsXBlock */
-.flashcards_block {
-    width:100%;
-    display:inline-block;
-    text-align:center;
-}
-
 .fc-title {
     display:block;
     width:100%;
@@ -30,41 +24,53 @@
     text-align:center;
 }
 
-.flashcards_block ul {
-    padding:0;
+.fc-number {
+  text-align: center;
 }
 
-.flashcards_block li {
-    list-style: none;
+.fc-container {
+  perspective: 900px;
+  width: 60%;
+  height: 653px;
+  display:inline-block;
+  text-align:center;
 }
 
-.fc-question {
-    display:inline-block;
-    width:40%;
-    padding:5% 3%;
-    text-align:center;
-    font-weight:600;
-    font-size:2em;
-    border:1px solid #000;
-    border-radius:20px;
-    margin-right:2%;
+.fc-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transform-origin: center right;
+  transition: transform 1s;
+  border: 1px solid rgba(236, 236, 236, 1);
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+  margin-left: 35%;
 }
 
-.fc-question:hover {
+.fc-card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 260px;
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  backface-visibility: hidden;
+}
+
+.fc-card-face-back {
+    transform: rotateY(180deg);
+}
+
+.fc-card.is-flipped {
+  transform: translateX(-100%) rotateY(-180deg);
+}
+
+#fc-question:hover {
     cursor: pointer;
-}
-
-.fc-answer {
-    visibility: hidden;
-    display:inline-block;
-    width:40%;
-    padding:5% 3%;
-    text-align:center;
-    font-weight:600;
-    font-size:2em;
-    border:1px solid #000;
-    border-radius:20px;
-    margin-left:2%;
 }
 
 .next-btn {

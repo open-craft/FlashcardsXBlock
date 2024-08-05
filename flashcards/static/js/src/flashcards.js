@@ -1,36 +1,30 @@
 /* Javascript for FlashcardsXBlock. */
-function FlashcardsXBlock(runtime, element) {
-    /* Show the answer of the question by cliking on the question */
-    $('.fc-question').click(function() {
-        $('.fc-answer').css('visibility', 'visible');
-    });
+function FlashcardsXBlock(runtime, element, params) {
+  /* Initializing the variables for displaying the current question
+     and total questions.
+  */
+  var currentNumber = -1;
+  var totalNumber = params.flashcards.length;
+  $('.fc-container').hide();
 
-    /* Initializing the variables for displaying the current question
-       and total questions.
-    */
-    var current_number = parseInt($('.current-fc').text())+1;
-    var total_number = parseInt($('.fc-total').text());
+  /* Show the answer of the question by cliking on the question */
+  $('.fc-card').click(function () {
+    $('.fc-card').toggleClass('is-flipped');
+  });
 
-    /* Hide all elements for the first iteration */
-    $('.flashcards_block li').hide();
-    $('.next-btn').click(function() {
-
-        /* Hide the answer again */
-        $('.fc-answer').css('visibility', 'hidden');
-
-        /* Removing the previous question. Have trouble figuring out how to
-           make it work without removing the previous question.
-           TO-DO: Figure this out!
-        */
-        $('.flashcards_block > ul > li:visible:first').remove();
-        $('.flashcards_block > ul > li:hidden:first').show();
-        $('.next-btn').html('NEXT');
-        $('.current-fc').html(current_number++);
-
-        /* If the student reaches the end say FINISHED and disable going further */
-        if (current_number == total_number+1) {
-            $('.btn').html('FINISHED!');
-            $('.btn').addClass('finished-btn').removeClass('next-btn').off('click');
-        }
-    });
+  $('.next-btn').click(function () {
+    currentNumber++;
+    $('.fc-card').removeClass('is-flipped');
+    $('.fc-container').show();
+    $('#fc-question').html(`${params.flashcards[currentNumber]["front"]}`);
+    $('#fc-answer').html(`${params.flashcards[currentNumber]["back"]}`)
+    $('#current-fc').html(`${currentNumber + 1}`);
+    $('.next-btn').html('Nextt');
+    /* If the student reaches the end say FINISHED and disable going further */
+    if (currentNumber == totalNumber - 1) {
+      $('.next-btn').html('You did it!');
+      $('.next-btn').addClass('finished-btn').removeClass('next-btn').off('click');
+    }
+  });
 }
+

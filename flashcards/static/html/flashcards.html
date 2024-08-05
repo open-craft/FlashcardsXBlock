@@ -1,21 +1,12 @@
-<div class="flashcards_block">
-<div class="fc-number"><span class="current-fc">0</span> / <span class="fc-total">{{ flashcards|length }}</span></div>
-<div class="fc-title">{{ title }}</div>
-<hr>
-<ul>
-    {% for question, answer in flashcards.items() %}
-    <li>
-        <div class="fc-question">
-            <p>Question</p>
-            {{ question }}
-        </div>
-        <div class="fc-answer">
-            <p>Answer</p>
-            {{ answer }}
-        </div>
-    </li>
-    {% endfor %}
-
-</ul>
+<div class="">
+  <div class="fc-number"><span id="current-fc">0</span> / <span class="fc-total">{{ flashcards|length }}</span></div>
+  <div class="fc-title">{{ title }}</div>
+  <hr>
+  <div class="fc-container">
+    <div class="fc-card">
+        <div class="fc-card-face" id="fc-question"></div>
+        <div class="fc-card-face fc-card-face-back" id="fc-answer"></div>
+    </div>
+  </div>
 </div>
 <div class="btn next-btn"> START </div>

@@ -7,7 +7,7 @@ answers (separated by a semicolon) which are then displayed as flashcards.
 
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
-from xblock.fields import List, Scope, String
+from xblock.fields import Dict, List, Scope, String
 from xblock.utils.resources import ResourceLoader
 
 
@@ -28,20 +28,24 @@ class FlashcardsXBlock(XBlock):
     )
 
     content = List(default=[], scope=Scope.settings, help="List of items")  # type: ignore[assignment]
-
-    def student_view(self, context: dict | None = None) -> Fragment:
-        """Create fragment and send the appropriate context."""
-        styling = {
+    styling = Dict(
+        default={
+            # Warning: consider backward compatibility before making any changes to keys.
             "fontSize": "16px",
             "backgroundColor": "#f8f9fa",
             "textColor": "#212529",
             "borderColor": "#dee2e6",
-        }
+        },
+        scope=Scope.settings,
+        help="Configurable styling for the flashcards; more information in the Studio edit view.",
+    )
 
+    def student_view(self, context: dict | None = None) -> Fragment:
+        """Create fragment and send the appropriate context."""
         context = {
             "title": self.display_name,
             "flashcards": self.content,
-            "styling": styling,
+            "styling": self.styling,
             "url": self.runtime.local_resource_url(self, "public/student-ui.js"),
         }
 
@@ -92,17 +96,10 @@ class FlashcardsXBlock(XBlock):
 
     def studio_view(self, context: dict | None = None) -> Fragment:
         """Create a fragment used to display the edit view in the Studio."""
-        styling = {
-            "fontSize": "16px",
-            "backgroundColor": "#f8f9fa",
-            "textColor": "#212529",
-            "borderColor": "#dee2e6",
-        }
-
         context = {
             "title": self.display_name,
             "flashcards": self.content,
-            "styling": styling,
+            "styling": self.styling,
             "url": self.runtime.local_resource_url(self, "public/studio-ui.js"),
         }
 
@@ -117,4 +114,5 @@ class FlashcardsXBlock(XBlock):
         """Called when submitting the form in Studio."""
         self.display_name = data.get("title")
         self.content = data.get("flashcards")
+        self.styling = data["styling"]
         return {"result": "success"}

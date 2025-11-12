@@ -75,10 +75,6 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
         </div>
         <div
           className="fc-title"
-          style={{
-            fontSize: styling.fontSize,
-            color: styling.textColor,
-          }}
           aria-label="Flashcard deck title"
         >
           {title}
@@ -96,11 +92,6 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
           <Button
             className="start-btn"
             onClick={handleStart}
-            style={{
-              backgroundColor: styling.backgroundColor,
-              borderColor: styling.borderColor,
-              color: styling.textColor,
-            }}
             aria-label="Start flashcard deck"
           >
             START
@@ -119,10 +110,6 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
       </div>
       <div
         className="fc-title"
-        style={{
-          fontSize: styling.fontSize,
-          color: styling.textColor,
-        }}
         aria-label="Flashcard deck title"
       >
         {title}
@@ -150,31 +137,45 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
           role="button"
           tabIndex={0}
           aria-label={`Flashcard ${currentIndex + 1} of ${shuffledFlashcards.length}. Click to flip.`}
-          style={{
-            borderColor: styling.borderColor,
-            backgroundColor: styling.backgroundColor,
-            color: styling.textColor,
-            fontSize: styling.fontSize,
-          }}
         >
-          <div className="fc-card-front">
+          <div
+            className="fc-card-front"
+            style={{
+              borderColor: styling.borderColor,
+              backgroundColor: styling.backgroundColor,
+            }}
+          >
             <div className="fc-flip-icon">
               <Icon src={FlipToBack} size="sm" />
             </div>
-            <p>Question</p>
+            <p className="label">Question</p>
             <div
-              id="fc-question"
+              className="card-content"
+              style={{
+                color: styling.textColor,
+                fontSize: styling.fontSize,
+              }}
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: currentFlashcard.front }}
             />
           </div>
-          <div className="fc-card-back">
+          <div
+            className="fc-card-back"
+            style={{
+              borderColor: styling.borderColor,
+              backgroundColor: styling.backgroundColor,
+            }}
+          >
             <div className="fc-flip-icon">
               <Icon src={FlipToBack} size="sm" />
             </div>
-            <p>Answer</p>
+            <p className="label">Answer</p>
             <div
-              id="fc-answer"
+              className="card-content"
+              style={{
+                color: styling.textColor,
+                fontSize: styling.fontSize,
+              }}
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: currentFlashcard.back }}
             />

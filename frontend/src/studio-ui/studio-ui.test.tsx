@@ -59,6 +59,7 @@ describe('StudioUi component test', () => {
     expect(jqueryMock.post).toHaveBeenCalledWith(studioSaveUrl, JSON.stringify({
       title: 'Test Deck',
       flashcards: [],
+      styling: {},
     }));
   });
 

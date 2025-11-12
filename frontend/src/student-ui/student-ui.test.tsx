@@ -108,13 +108,15 @@ describe('StudentUi', () => {
     render(<StudentUi {...props} />);
     await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
 
-    const flashcard = screen.getByRole('button', { name: /Flashcard/ });
-    if (flashcard) {
-      expect(flashcard).toHaveStyle({ fontSize: props.styling.fontSize });
-      expect(flashcard).toHaveStyle({ borderColor: props.styling.borderColor });
-      expect(flashcard).toHaveStyle({ backgroundColor: props.styling.backgroundColor });
-      expect(flashcard).toHaveStyle({ color: props.styling.textColor });
-    }
+    const flashcardContainer = screen.getByRole('button', { name: /Flashcard/ });
+    const flashcard = flashcardContainer.querySelector('.fc-card-front');
+    const content = flashcardContainer.querySelector('.card-content');
+
+    expect(flashcard).toHaveStyle({ borderColor: props.styling.borderColor });
+    expect(flashcard).toHaveStyle({ backgroundColor: props.styling.backgroundColor });
+
+    expect(content).toHaveStyle({ fontSize: props.styling.fontSize });
+    expect(content).toHaveStyle({ color: props.styling.textColor });
   });
 
   it('shuffles the flashcards', async () => {

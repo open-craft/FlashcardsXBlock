@@ -1,0 +1,36 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    strategy:
+      matrix:
+        npm_script:
+        - lint
+        - coverage
+        - check-build
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Nodejs Env
+      run: echo "NODE_VER=`cat .nvmrc`" >> $GITHUB_ENV
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VER }}
+    - run: npm ci
+    - run: npm run ${{ matrix.npm_script }}
+    - name: upload coverage
+      uses: codecov/codecov-action@v4
+      if: matrix.npm_script == 'coverage'
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: false
+        flags: frontend

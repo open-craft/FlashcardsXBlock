@@ -1,0 +1,118 @@
+@import "../index";
+@import "~@openedx/paragon/scss/core/utilities";
+@import "~@openedx/paragon/src/ColorPicker/index.scss";
+@import "~@openedx/paragon/src/Form/index.scss";
+
+.xblock-flashcards {
+    .d-flex {
+        display: flex;
+    }
+    
+    .flex-column {
+        flex-direction: column;
+    }
+    
+    .flex-row {
+        flex-direction: row;
+    }
+
+    .justify-content-end {
+        justify-content: flex-end;
+    }
+    
+    .align-items-center {
+        align-items: center;
+    }
+
+    .mb-2, .mb-3 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .mr-2 {
+        margin-right: 0.5rem;
+    }
+    
+    .ml-1 {
+        margin-left: 0.25rem;
+    }
+    
+    .px-2 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .py-1 {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+    
+    .w-100 {
+        width: 100%;
+    }
+
+    .rounded-0 {
+        border-radius: 0;
+    }
+
+    label {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    input, textarea {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        
+        &:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    }
+    
+    .button {
+        padding: 0.5rem 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        color: #495057;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        
+        &.action-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+        
+        &:hover {
+            background-color: #e9ecef;
+        }
+        
+        &.action-primary:hover {
+            background-color: #0056b3;
+        }
+    }
+    
+    .xblock-actions {
+        border-top: 1px solid #dee2e6;
+        padding-top: 1rem;
+        
+        .action-buttons {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 0.5rem;
+            
+            .action-item {
+                display: inline-block;
+            }
+        }
+    }
+}

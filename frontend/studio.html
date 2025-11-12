@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcards XBlock Studio View</title>
+    <style>
+        /* This styling is applied to center the view and roughly give it a
+           similar viewport as the studio modal */
+        #root {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+    <!-- This stylesheet is included to make the preview more accurate to the
+         styling in studio.  -->
+    <link rel="stylesheet" href="http://studio.local.overhang.io:8001/static/studio/css/studio-main-v1.css"/>
+</head>
+<body>
+<script type="module" src="/src/studio-ui/dev-preview.ts"></script>
+<div id="root" class="card"></div>
+</body>
+</html>

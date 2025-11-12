@@ -1,62 +1,58 @@
 """
-    Flashcards XBlock allowes the editor to add a list of quesitions and
-    answers (separated by a semicolon) which are then displayed as flashcards.
+An XBlock for displaying flashcards.
+
+Flashcards XBlock allows the editor to add a list of questions and
+answers (separated by a semicolon) which are then displayed as flashcards.
 """
 
-import pkg_resources
-
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
-from xblock.fields import Scope, Dict, String
-from xblock.fragment import Fragment
-
-from lxml import etree
-
-from jinja2 import Environment, PackageLoader
-
-env = Environment(loader=PackageLoader('flashcards', 'static/html'))
+from xblock.fields import List, Scope, String
+from xblock.utils.resources import ResourceLoader
 
 
 class FlashcardsXBlock(XBlock):
     """
+    The FlashcardsXBlock class.
+
     The content (the values between the <flashcards> tags) is saved as a
-    dictionary and passed as a dictionary to the HTML template
+    list of flashcard objects and passed as an array to the HTML template.
     """
-    title = String(
-            default=u"Flashcards title",
-            scope=Scope.settings,
-            help=u"Title of the flashcards block"
-        )
 
-    content = Dict(
-            default={},
-            scope=Scope.settings,
-            help=u"List of items"
-        )
+    loader = ResourceLoader(__name__)
+    display_name = String(
+        display_name="Display Name",
+        default="Flashcards",  # type: ignore[assignment]
+        scope=Scope.settings,
+        help="The title of the XBlock. It is displayed to the learners.",
+    )
 
+    content = List(default=[], scope=Scope.settings, help="List of items")  # type: ignore[assignment]
 
-    def resource_string(self, path):
-        """Handy helper for getting resources from our kit."""
-        data = pkg_resources.resource_string(__name__, path)
-        return data.decode("utf8")
-
-
-    def student_view(self, context=None):
+    def student_view(self, context: dict | None = None) -> Fragment:
         """Create fragment and send the appropriate context."""
+        styling = {
+            "fontSize": "16px",
+            "backgroundColor": "#f8f9fa",
+            "textColor": "#212529",
+            "borderColor": "#dee2e6",
+        }
+
         context = {
-            'flashcards': self.content,
-            'title': self.title,
+            "title": self.display_name,
+            "flashcards": self.content,
+            "styling": styling,
+            "url": self.runtime.local_resource_url(self, "public/student-ui.js"),
         }
 
         frag = Fragment()
-        template = env.get_template("flashcards.html")
-        frag.add_content(template.render(**context))
-        frag.add_css(self.resource_string("static/css/flashcards.css"))
-        frag.add_javascript(self.resource_string("static/js/src/flashcards.js"))
-        frag.initialize_js('FlashcardsXBlock')
+        frag.add_javascript(self.loader.load_unicode("static/js/student.js"))
+        frag.add_css_url(self.runtime.local_resource_url(self, "public/student-ui.css"))
+        frag.initialize_js("FlashcardsBlock", context)
         return frag
 
     @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator):
+    def parse_xml(cls, node, runtime, keys, id_generator) -> XBlock:  # noqa: ANN001, ARG003
         """
         Parse the XML for an HTML block.
 
@@ -64,63 +60,61 @@ class FlashcardsXBlock(XBlock):
         content of the XBlock.
 
         The content between the <flashcards> blocks is being transformed
-        into a dictionary, and as such saved into the content class variable
-        (which is accessable with self.content)
+        into a list of flashcard objects, and as such saved into the content class variable
+        (which is accessible with self.content)
         """
         block = runtime.construct_xblock_from_class(cls, keys)
-        flashcards = {}
+        flashcards = []
 
-        for element in node.iter("flashcard"):
-            flashcards[element.attrib["front"]] = element.attrib["back"]
+        flashcards = [
+            {"front": element.attrib["front"], "back": element.attrib["back"]} for element in node.iter("flashcard")
+        ]
 
         block.content = flashcards
-        block.title = node.attrib['title']
+        block.title = node.attrib["title"]
         return block
 
-
     @staticmethod
-    def workbench_scenarios():
+    def workbench_scenarios() -> list[tuple[str, str]]:
         """A canned scenario for display in the workbench."""
         return [
-            ("FlashcardsXBlock",
-             """<vertical_demo>
+            (
+                "FlashcardsXBlock",
+                """<vertical_demo>
                 <flashcards title="Capital cities">
 <flashcard front="Croatia" back="Zagreb" />
 <flashcard front="France" back="Paris" />
                 </flashcards>
                 </vertical_demo>
-             """),
+             """,
+            ),
         ]
 
-    def studio_view(self, context):
+    def studio_view(self, context: dict | None = None) -> Fragment:
         """Create a fragment used to display the edit view in the Studio."""
-
-        context = {
-            'flashcards': self.content,
-            'title': self.title,
+        styling = {
+            "fontSize": "16px",
+            "backgroundColor": "#f8f9fa",
+            "textColor": "#212529",
+            "borderColor": "#dee2e6",
         }
 
-        frag = Fragment()
-        template = env.get_template('flashcards_edit.html')
-        frag.add_content(template.render(**context))
-        frag.add_css(self.resource_string("static/css/flashcards_edit.css"))
-        frag.add_javascript(self.resource_string("static/js/src/flashcards_edit.js"))
-        frag.initialize_js('FlashcardsEditXBlock')
+        context = {
+            "title": self.display_name,
+            "flashcards": self.content,
+            "styling": styling,
+            "url": self.runtime.local_resource_url(self, "public/studio-ui.js"),
+        }
+
+        frag = Fragment(self.loader.render_django_template("static/html/studio.html", context=context))
+        frag.add_javascript(self.loader.load_unicode("static/js/studio.js"))
+        frag.add_css_url(self.runtime.local_resource_url(self, "public/studio-ui.css"))
+        frag.initialize_js("FlashcardsEditor", context)
         return frag
 
     @XBlock.json_handler
-    def studio_submit(self, data, suffix=''):
+    def studio_submit(self, data: dict, suffix: str = "") -> dict[str, str]:  # noqa: ARG002
         """Called when submitting the form in Studio."""
-        self.title = data.get('title')
-        
-        flashcards = {}
-
-        fclist = data.get('flashcards').items()
-        fclist.reverse() # print out the list in the same order as entered
-        for item in fclist:
-            front, back = item
-            flashcards[front] = back        
-
-        self.content = flashcards
-
-        return {'result':'success'}
+        self.display_name = data.get("title")
+        self.content = data.get("flashcards")
+        return {"result": "success"}

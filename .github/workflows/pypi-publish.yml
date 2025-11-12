@@ -1,0 +1,26 @@
+name: Publish package to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: 3.11
+
+      - name: Build package
+        run: uv build
+
+      - name: Publish to PyPi
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_UPLOAD_TOKEN }}

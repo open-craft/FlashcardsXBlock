@@ -1,0 +1,50 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite -c vite.web.config.ts",
+    "_build": "tsc -b && vite build",
+    "build:student": "COMPONENT=student-ui npm run _build",
+    "build:studio": "COMPONENT=studio-ui npm run _build",
+    "build": "npm run build:studio && npm run build:student",
+    "check-build": "npm run build && git diff --exit-code",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest --coverage"
+  },
+  "dependencies": {
+    "@openedx/paragon": "^22.20.0",
+    "@tinymce/tinymce-react": "^5.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tinymce": "^7.2.1"
+  },
+  "devDependencies": {
+    "@edx/typescript-config": "^1.0.1",
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jquery": "^3.5.30",
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-istanbul": "^2.0.4",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "jsdom": "^24.1.1",
+    "sass": "^1.77.6",
+    "typescript": "^4.9.4",
+    "vite": "^5.3.1",
+    "vitest": "^2.0.4"
+  }
+}

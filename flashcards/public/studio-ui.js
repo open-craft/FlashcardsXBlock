@@ -70921,7 +70921,8 @@ function _Ce({
     const Se = K.filter((be) => be.front && be.back);
     $.post(f, JSON.stringify({
       title: H,
-      flashcards: Se
+      flashcards: Se,
+      styling: A
     })).done(() => {
       g.notify("save", { state: "end" });
     });

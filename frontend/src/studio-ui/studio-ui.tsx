@@ -50,6 +50,7 @@ export default function StudioUi({
     $.post(studioSaveUrl, JSON.stringify({
       title,
       flashcards: flashcardsArray,
+      styling,
     })).done(() => {
       runtime.notify('save', { state: 'end' });
     });

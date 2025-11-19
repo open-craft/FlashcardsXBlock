@@ -93,19 +93,16 @@
             }
         }
 
-        p {
+        p.label {
             margin-top: 0;
             margin-bottom: 10px;
             font-size: 0.8em;
-            color: #666;
             font-style: italic;
             font-weight: 200;
         }
 
-        #fc-question,
-        #fc-answer {
+        .card-content {
             font-weight: 600;
-            font-size: 1.2em;
             line-height: 1.4;
         }
     }

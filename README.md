@@ -66,7 +66,7 @@ mise run frontend-build
 
 # check the unit tests
 mise run frontend-test
-
+```
 
 ## Want to contribute?
 

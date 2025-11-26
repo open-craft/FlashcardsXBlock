@@ -45,6 +45,29 @@ Editing modal in Authoring:
 
 - There is a Github workflow that automatically creates Pypi releases when you create a release on Github.
 
+### Frontend
+
+The frontend is built using Typescript and React; it must be built before it can be used.
+See ./mise.toml and ./frontend/package.json for available tasks.
+An example development workflow could look something like this:
+
+```sh
+# install dependencies
+mise run frontend-install
+
+# run a development server with hot-reloading
+mise run frontend-dev
+
+# edit the frontend files
+
+# when ready, kill the dev server, and build the frontend.
+# If you have this XBlock installed on your Open edX devstack, you can then refresh the page to see updates in live components in a course on the devstack.
+mise run frontend-build
+
+# check the unit tests
+mise run frontend-test
+
+
 ## Want to contribute?
 
 If you have a suggestion, question or found a bug, please [open an issue](https://github.com/open-craft/FlashcardsXBlock/issues/new).

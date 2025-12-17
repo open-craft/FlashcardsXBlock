@@ -70,7 +70,7 @@ describe('StudentUi', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
 
     screen.getByText('Question 1');
-    const counter1 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter1 = screen.getByLabelText('Flashcard counter');
     expect(counter1?.textContent).toBe('1 / 3');
 
     const prevBtn = screen.getByRole('button', { name: 'Previous card' });
@@ -82,7 +82,7 @@ describe('StudentUi', () => {
 
     await userEvent.click(nextBtn);
     expect(screen.getByText('Question 2')).toBeInTheDocument();
-    const counter2 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter2 = screen.getByLabelText('Flashcard counter');
     expect(counter2?.textContent).toBe('2 / 3');
 
     // Both buttons should be enabled on middle card
@@ -91,7 +91,7 @@ describe('StudentUi', () => {
 
     await userEvent.click(nextBtn);
     expect(screen.getByText('Question 3')).toBeInTheDocument();
-    const counter3 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter3 = screen.getByLabelText('Flashcard counter');
     expect(counter3?.textContent).toBe('3 / 3');
 
     // Next button should be disabled on last card
@@ -100,7 +100,7 @@ describe('StudentUi', () => {
 
     await userEvent.click(prevBtn);
     expect(screen.getByText('Question 2')).toBeInTheDocument();
-    const counter4 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter4 = screen.getByLabelText('Flashcard counter');
     expect(counter4?.textContent).toBe('2 / 3');
   });
 

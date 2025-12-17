@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/// <reference path="./react-inert.d.ts" />
 declare let $: JQueryStatic;
 
 type Flashcard = {

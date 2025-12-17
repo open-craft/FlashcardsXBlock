@@ -6361,7 +6361,7 @@ function Np({ title: e, flashcards: n, styling: t }) {
       }
   }, [r, u, h]), !u)
     return /* @__PURE__ */ M.jsxs("div", { className: "flashcards_block", children: [
-      /* @__PURE__ */ M.jsxs("div", { className: "fc-number", "aria-label": "Flashcard counter", role: "status", children: [
+      /* @__PURE__ */ M.jsxs("div", { className: "fc-number", "aria-label": "Flashcard counter", children: [
         "0 / ",
         /* @__PURE__ */ M.jsx("span", { className: "fc-total", children: g.length })
       ] }),
@@ -6400,7 +6400,7 @@ function Np({ title: e, flashcards: n, styling: t }) {
     ] });
   const N = g[r];
   return /* @__PURE__ */ M.jsxs("div", { className: "flashcards_block", children: [
-    /* @__PURE__ */ M.jsxs("div", { className: "fc-number", "aria-label": "Flashcard counter", role: "status", children: [
+    /* @__PURE__ */ M.jsxs("div", { className: "fc-number", "aria-label": "Flashcard counter", children: [
       /* @__PURE__ */ M.jsx("span", { className: "current-fc", children: r + 1 }),
       " / ",
       /* @__PURE__ */ M.jsx("span", { className: "fc-total", children: g.length })
@@ -6444,6 +6444,8 @@ function Np({ title: e, flashcards: n, styling: t }) {
               "div",
               {
                 className: "fc-card-front",
+                "aria-hidden": o,
+                inert: o ? "" : void 0,
                 style: {
                   borderColor: t.borderColor,
                   backgroundColor: t.backgroundColor
@@ -6469,6 +6471,8 @@ function Np({ title: e, flashcards: n, styling: t }) {
               "div",
               {
                 className: "fc-card-back",
+                "aria-hidden": !o,
+                inert: o ? void 0 : "",
                 style: {
                   borderColor: t.borderColor,
                   backgroundColor: t.backgroundColor

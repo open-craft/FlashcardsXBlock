@@ -124,7 +124,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   if (!isStarted) {
     return (
       <div className="flashcards_block">
-        <div className="fc-number" aria-label="Flashcard counter" role="status">
+        <div className="fc-number" aria-label="Flashcard counter">
           0 / <span className="fc-total">{shuffledFlashcards.length}</span>
         </div>
         <div
@@ -159,7 +159,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
 
   return (
     <div className="flashcards_block">
-      <div className="fc-number" aria-label="Flashcard counter" role="status">
+      <div className="fc-number" aria-label="Flashcard counter">
         <span className="current-fc">{currentIndex + 1}</span> / <span className="fc-total">{shuffledFlashcards.length}</span>
       </div>
       <div
@@ -198,6 +198,8 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
         >
           <div
             className="fc-card-front"
+            aria-hidden={isFlipped}
+            inert={isFlipped ? '' : undefined}
             style={{
               borderColor: styling.borderColor,
               backgroundColor: styling.backgroundColor,
@@ -219,6 +221,8 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
           </div>
           <div
             className="fc-card-back"
+            aria-hidden={!isFlipped}
+            inert={!isFlipped ? '' : undefined}
             style={{
               borderColor: styling.borderColor,
               backgroundColor: styling.backgroundColor,

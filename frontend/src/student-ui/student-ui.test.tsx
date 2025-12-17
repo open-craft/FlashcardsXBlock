@@ -149,4 +149,34 @@ describe('StudentUi', () => {
     // Restore the original Math.random.
     Math.random = originalRandom;
   });
+
+  it('moves focus to the card after start and navigation', async () => {
+    render(<StudentUi {...props} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
+    expect(screen.getByRole('button', { name: /Flashcard 1 of/i })).toHaveFocus();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Next card' }));
+    expect(screen.getByRole('button', { name: /Flashcard 2 of/i })).toHaveFocus();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Previous card' }));
+    expect(screen.getByRole('button', { name: /Flashcard 1 of/i })).toHaveFocus();
+  });
+
+  it('announces the current card content', async () => {
+    render(<StudentUi {...props} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
+
+    const announcement = screen.getByRole('status', { name: 'Flashcard announcement' });
+    expect(announcement).toHaveTextContent(/Card 1 of 3\. Question\./i);
+    expect(announcement).toHaveTextContent(/Question 1/i);
+
+    await userEvent.click(screen.getByRole('button', { name: /Flashcard 1 of/i }));
+    expect(announcement).toHaveTextContent(/Card 1 of 3\. Answer\./i);
+    expect(announcement).toHaveTextContent(/Answer 1/i);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Next card' }));
+    expect(announcement).toHaveTextContent(/Card 2 of 3\. Question\./i);
+    expect(announcement).toHaveTextContent(/Question 2/i);
+  });
 });

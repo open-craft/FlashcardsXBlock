@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import { Button, Icon } from '@openedx/paragon';
 import {
   FlipToBack, ChevronLeft, ChevronRight, Shuffle,
@@ -11,12 +13,42 @@ interface StudentUiProps {
   styling: FlashcardStyling,
 }
 
+function htmlToText(html: string): string {
+  if (!html) {
+    return '';
+  }
+  if (typeof document === 'undefined') {
+    return html;
+  }
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  return (container.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
 function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [shouldFocusCard, setShouldFocusCard] = useState(false);
   const [shuffledFlashcards, setShuffledFlashcards] = useState(flashcards);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const announcementText = useMemo(() => {
+    if (!isStarted || currentIndex < 0 || currentIndex >= shuffledFlashcards.length) {
+      return '';
+    }
+
+    const currentFlashcard = shuffledFlashcards[currentIndex];
+    if (!currentFlashcard) {
+      return '';
+    }
+
+    const total = shuffledFlashcards.length;
+    const sideLabel = isFlipped ? 'Answer' : 'Question';
+    const visibleHtml = isFlipped ? currentFlashcard.back : currentFlashcard.front;
+    const visibleText = htmlToText(visibleHtml);
+    return `Card ${currentIndex + 1} of ${total}. ${sideLabel}.${visibleText ? ` ${visibleText}` : ''}`;
+  }, [currentIndex, isFlipped, isStarted, shuffledFlashcards]);
 
   const shuffleArray = (array: Flashcard[]) => {
     const shuffled = [...array];
@@ -28,6 +60,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   };
 
   const handleStart = () => {
+    setShouldFocusCard(true);
     setIsStarted(true);
     setCurrentIndex(0);
     setIsFlipped(false);
@@ -37,12 +70,14 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
     const shuffled = shuffleArray(flashcards);
     setShuffledFlashcards(shuffled);
     if (isStarted) {
+      setShouldFocusCard(true);
       setCurrentIndex(0);
       setIsFlipped(false);
     }
   };
 
   const navigateTo = (newIndex: number) => {
+    setShouldFocusCard(true);
     // Prevent flipping the card while navigating.
     setIsNavigating(true);
     setIsFlipped(false);
@@ -66,6 +101,25 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
+
+  useEffect(() => {
+    if (!isStarted || !shouldFocusCard) {
+      return;
+    }
+
+    const el = cardRef.current;
+    if (!el) {
+      return;
+    }
+
+    try {
+      el.focus({ preventScroll: true });
+    } catch (e) {
+      el.focus();
+    } finally {
+      setShouldFocusCard(false);
+    }
+  }, [currentIndex, isStarted, shouldFocusCard]);
 
   if (!isStarted) {
     return (
@@ -115,6 +169,9 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
         {title}
       </div>
       <hr />
+      <div className="visually-hidden" role="status" aria-atomic="true" aria-label="Flashcard announcement">
+        {announcementText}
+      </div>
       <div className="fc-container">
         <Button
           className="nav-btn prev-btn"
@@ -127,6 +184,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
         </Button>
         <div
           className={`fc-card ${isFlipped ? 'is-flipped' : ''} ${isNavigating ? 'is-navigating' : ''}`}
+          ref={cardRef}
           onClick={handleFlip}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {

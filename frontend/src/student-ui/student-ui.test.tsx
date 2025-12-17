@@ -111,12 +111,15 @@ describe('StudentUi', () => {
     const flashcardContainer = screen.getByRole('button', { name: /Flashcard/ });
     const flashcard = flashcardContainer.querySelector('.fc-card-front');
     const content = flashcardContainer.querySelector('.card-content');
+    const label = flashcardContainer.querySelector('.fc-card-front .label');
 
     expect(flashcard).toHaveStyle({ borderColor: props.styling.borderColor });
     expect(flashcard).toHaveStyle({ backgroundColor: props.styling.backgroundColor });
 
     expect(content).toHaveStyle({ fontSize: props.styling.fontSize });
     expect(content).toHaveStyle({ color: props.styling.textColor });
+    expect(label).not.toBeNull();
+    expect(label as HTMLElement).toHaveStyle({ color: props.styling.textColor });
   });
 
   it('shuffles the flashcards', async () => {

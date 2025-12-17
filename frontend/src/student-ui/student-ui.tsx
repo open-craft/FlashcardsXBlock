@@ -148,7 +148,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
             <div className="fc-flip-icon">
               <Icon src={FlipToBack} size="sm" />
             </div>
-            <p className="label">Question</p>
+            <p className="label" style={{ color: styling.textColor }}>Question</p>
             <div
               className="card-content"
               style={{
@@ -169,7 +169,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
             <div className="fc-flip-icon">
               <Icon src={FlipToBack} size="sm" />
             </div>
-            <p className="label">Answer</p>
+            <p className="label" style={{ color: styling.textColor }}>Answer</p>
             <div
               className="card-content"
               style={{

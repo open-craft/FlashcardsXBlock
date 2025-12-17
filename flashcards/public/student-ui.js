@@ -6420,7 +6420,7 @@ function _p({ title: e, flashcards: n, styling: t }) {
                 },
                 children: [
                   /* @__PURE__ */ O.jsx("div", { className: "fc-flip-icon", children: /* @__PURE__ */ O.jsx(Cn, { src: us, size: "sm" }) }),
-                  /* @__PURE__ */ O.jsx("p", { className: "label", children: "Question" }),
+                  /* @__PURE__ */ O.jsx("p", { className: "label", style: { color: t.textColor }, children: "Question" }),
                   /* @__PURE__ */ O.jsx(
                     "div",
                     {
@@ -6445,7 +6445,7 @@ function _p({ title: e, flashcards: n, styling: t }) {
                 },
                 children: [
                   /* @__PURE__ */ O.jsx("div", { className: "fc-flip-icon", children: /* @__PURE__ */ O.jsx(Cn, { src: us, size: "sm" }) }),
-                  /* @__PURE__ */ O.jsx("p", { className: "label", children: "Answer" }),
+                  /* @__PURE__ */ O.jsx("p", { className: "label", style: { color: t.textColor }, children: "Answer" }),
                   /* @__PURE__ */ O.jsx(
                     "div",
                     {

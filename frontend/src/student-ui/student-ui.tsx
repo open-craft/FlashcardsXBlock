@@ -32,7 +32,9 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   const [isNavigating, setIsNavigating] = useState(false);
   const [shouldFocusCard, setShouldFocusCard] = useState(false);
   const [shuffledFlashcards, setShuffledFlashcards] = useState(flashcards);
+  const [liveAnnouncement, setLiveAnnouncement] = useState('');
   const cardRef = useRef<HTMLDivElement | null>(null);
+  const announcementTimeoutRef = useRef<number | null>(null);
   const announcementText = useMemo(() => {
     if (!isStarted || currentIndex < 0 || currentIndex >= shuffledFlashcards.length) {
       return '';
@@ -121,6 +123,26 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
     }
   }, [currentIndex, isStarted, shouldFocusCard]);
 
+  useEffect(() => {
+    if (announcementTimeoutRef.current !== null) {
+      window.clearTimeout(announcementTimeoutRef.current);
+      announcementTimeoutRef.current = null;
+    }
+
+    if (!announcementText) {
+      setLiveAnnouncement('');
+      return;
+    }
+
+    // Clear then set on next tick so screen readers reliably announce updates,
+    // especially for the initial announcement right after clicking "Start".
+    setLiveAnnouncement('');
+    announcementTimeoutRef.current = window.setTimeout(() => {
+      setLiveAnnouncement(announcementText);
+      announcementTimeoutRef.current = null;
+    }, 0);
+  }, [announcementText]);
+
   if (!isStarted) {
     return (
       <div className="flashcards_block">
@@ -170,7 +192,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
       </div>
       <hr />
       <div className="visually-hidden" role="status" aria-atomic="true" aria-label="Flashcard announcement">
-        {announcementText}
+        {liveAnnouncement}
       </div>
       <div className="fc-container">
         <Button

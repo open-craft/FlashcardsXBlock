@@ -2,7 +2,7 @@ import React from 'react';
 import {
   beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import StudentUi from './student-ui';
 
@@ -168,15 +168,15 @@ describe('StudentUi', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
 
     const announcement = screen.getByRole('status', { name: 'Flashcard announcement' });
-    expect(announcement).toHaveTextContent(/Card 1 of 3\. Question\./i);
+    await waitFor(() => expect(announcement).toHaveTextContent(/Card 1 of 3\. Question\./i));
     expect(announcement).toHaveTextContent(/Question 1/i);
 
     await userEvent.click(screen.getByRole('button', { name: /Flashcard 1 of/i }));
-    expect(announcement).toHaveTextContent(/Card 1 of 3\. Answer\./i);
+    await waitFor(() => expect(announcement).toHaveTextContent(/Card 1 of 3\. Answer\./i));
     expect(announcement).toHaveTextContent(/Answer 1/i);
 
     await userEvent.click(screen.getByRole('button', { name: 'Next card' }));
-    expect(announcement).toHaveTextContent(/Card 2 of 3\. Question\./i);
+    await waitFor(() => expect(announcement).toHaveTextContent(/Card 2 of 3\. Question\./i));
     expect(announcement).toHaveTextContent(/Question 2/i);
   });
 });

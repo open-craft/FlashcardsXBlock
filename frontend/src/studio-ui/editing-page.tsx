@@ -8,10 +8,11 @@ interface EditingPageProps {
   setTitle: (val: string) => void
   flashcards: Flashcard[]
   setFlashcards: (val: Flashcard[]) => void
+  styling: FlashcardStyling
 }
 
 function EditingPage({
-  title, setTitle, flashcards, setFlashcards,
+  title, setTitle, flashcards, setFlashcards, styling,
 }: EditingPageProps) {
   const [selectedCard, setSelectedCard] = React.useState<number | null>(0);
 
@@ -83,6 +84,7 @@ function EditingPage({
               <label className="mb-2" htmlFor="flashcard-front">Front (Question)</label>
               <TinyMceEditor
                 value={flashcards[selectedCard].front}
+                styling={styling}
                 onChange={(val) => updateFlashcard(selectedCard, { front: val })}
               />
             </div>
@@ -90,6 +92,7 @@ function EditingPage({
               <label className="mb-2" htmlFor="flashcard-back">Back (Answer)</label>
               <TinyMceEditor
                 value={flashcards[selectedCard].back}
+                styling={styling}
                 onChange={(val) => updateFlashcard(selectedCard, { back: val })}
               />
             </div>

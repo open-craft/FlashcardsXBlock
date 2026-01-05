@@ -156,6 +156,9 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
           {title}
         </div>
         <hr />
+        <div className="visually-hidden" role="status" aria-atomic="true" aria-label="Flashcard announcement">
+          {liveAnnouncement}
+        </div>
         <div className="fc-start-controls">
           <Button
             className="shuffle-btn"

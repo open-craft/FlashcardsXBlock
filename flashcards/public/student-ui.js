@@ -6382,6 +6382,7 @@ function Np({ title: e, flashcards: n, styling: t }) {
         }
       ),
       /* @__PURE__ */ O.jsx("hr", {}),
+      /* @__PURE__ */ O.jsx("div", { className: "visually-hidden", role: "status", "aria-atomic": "true", "aria-label": "Flashcard announcement", children: k }),
       /* @__PURE__ */ O.jsxs("div", { className: "fc-start-controls", children: [
         /* @__PURE__ */ O.jsxs(
           an,

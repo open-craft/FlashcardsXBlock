@@ -20,7 +20,15 @@ describe('EditingPage', () => {
     const setTitle = vi.fn();
     const flashcards = [];
     const title = 'Test Deck';
-    render(<EditingPage title={title} setTitle={setTitle} flashcards={flashcards} setFlashcards={setFlashcards} />);
+    render(
+      <EditingPage
+        title={title}
+        setTitle={setTitle}
+        flashcards={flashcards}
+        setFlashcards={setFlashcards}
+        styling={{}}
+      />,
+    );
     await user.click(screen.getByText(/Add Flashcard/i));
     expect(setFlashcards)
       .toHaveBeenCalledTimes(1);
@@ -34,7 +42,15 @@ describe('EditingPage', () => {
       front: 'Question 1',
       back: 'Answer 1',
     }];
-    render(<EditingPage title={title} setTitle={setTitle} flashcards={flashcards} setFlashcards={setFlashcards} />);
+    render(
+      <EditingPage
+        title={title}
+        setTitle={setTitle}
+        flashcards={flashcards}
+        setFlashcards={setFlashcards}
+        styling={{}}
+      />,
+    );
 
     fireEvent.click(screen.getByRole('button', { name: /Question 1/i }));
     // TinyMCE editor is mocked, so we can't test the actual editing functionality

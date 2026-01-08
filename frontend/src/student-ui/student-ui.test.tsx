@@ -2,7 +2,7 @@ import React from 'react';
 import {
   beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import StudentUi from './student-ui';
 
@@ -70,7 +70,7 @@ describe('StudentUi', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
 
     screen.getByText('Question 1');
-    const counter1 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter1 = screen.getByLabelText('Flashcard counter');
     expect(counter1?.textContent).toBe('1 / 3');
 
     const prevBtn = screen.getByRole('button', { name: 'Previous card' });
@@ -82,7 +82,7 @@ describe('StudentUi', () => {
 
     await userEvent.click(nextBtn);
     expect(screen.getByText('Question 2')).toBeInTheDocument();
-    const counter2 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter2 = screen.getByLabelText('Flashcard counter');
     expect(counter2?.textContent).toBe('2 / 3');
 
     // Both buttons should be enabled on middle card
@@ -91,7 +91,7 @@ describe('StudentUi', () => {
 
     await userEvent.click(nextBtn);
     expect(screen.getByText('Question 3')).toBeInTheDocument();
-    const counter3 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter3 = screen.getByLabelText('Flashcard counter');
     expect(counter3?.textContent).toBe('3 / 3');
 
     // Next button should be disabled on last card
@@ -100,7 +100,7 @@ describe('StudentUi', () => {
 
     await userEvent.click(prevBtn);
     expect(screen.getByText('Question 2')).toBeInTheDocument();
-    const counter4 = screen.getByRole('status', { name: 'Flashcard counter' });
+    const counter4 = screen.getByLabelText('Flashcard counter');
     expect(counter4?.textContent).toBe('2 / 3');
   });
 
@@ -111,12 +111,15 @@ describe('StudentUi', () => {
     const flashcardContainer = screen.getByRole('button', { name: /Flashcard/ });
     const flashcard = flashcardContainer.querySelector('.fc-card-front');
     const content = flashcardContainer.querySelector('.card-content');
+    const label = flashcardContainer.querySelector('.fc-card-front .label');
 
     expect(flashcard).toHaveStyle({ borderColor: props.styling.borderColor });
     expect(flashcard).toHaveStyle({ backgroundColor: props.styling.backgroundColor });
 
     expect(content).toHaveStyle({ fontSize: props.styling.fontSize });
     expect(content).toHaveStyle({ color: props.styling.textColor });
+    expect(label).not.toBeNull();
+    expect(label as HTMLElement).toHaveStyle({ color: props.styling.textColor });
   });
 
   it('shuffles the flashcards', async () => {
@@ -145,5 +148,35 @@ describe('StudentUi', () => {
 
     // Restore the original Math.random.
     Math.random = originalRandom;
+  });
+
+  it('moves focus to the card after start and navigation', async () => {
+    render(<StudentUi {...props} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
+    expect(screen.getByRole('button', { name: /Flashcard 1 of/i })).toHaveFocus();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Next card' }));
+    expect(screen.getByRole('button', { name: /Flashcard 2 of/i })).toHaveFocus();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Previous card' }));
+    expect(screen.getByRole('button', { name: /Flashcard 1 of/i })).toHaveFocus();
+  });
+
+  it('announces the current card content', async () => {
+    render(<StudentUi {...props} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Start flashcard deck' }));
+
+    const announcement = screen.getByRole('status', { name: 'Flashcard announcement' });
+    await waitFor(() => expect(announcement).toHaveTextContent(/Card 1 of 3\. Question\./i));
+    expect(announcement).toHaveTextContent(/Question 1/i);
+
+    await userEvent.click(screen.getByRole('button', { name: /Flashcard 1 of/i }));
+    await waitFor(() => expect(announcement).toHaveTextContent(/Card 1 of 3\. Answer\./i));
+    expect(announcement).toHaveTextContent(/Answer 1/i);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Next card' }));
+    await waitFor(() => expect(announcement).toHaveTextContent(/Card 2 of 3\. Question\./i));
+    expect(announcement).toHaveTextContent(/Question 2/i);
   });
 });

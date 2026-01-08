@@ -1,0 +1,9 @@
+/// <reference types="react" />
+
+declare module 'react' {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    inert?: string;
+  }
+}
+
+export {};

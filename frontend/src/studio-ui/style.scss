@@ -115,4 +115,15 @@
             }
         }
     }
+
+    .tinymce-wrapper {
+        border: 1px solid;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .tox.tox-tinymce {
+            border: none;
+            border-radius: 0;
+        }
+    }
 }

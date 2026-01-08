@@ -67,6 +67,7 @@ export default function StudioUi({
               setTitle={setTitle}
               flashcards={flashcards}
               setFlashcards={setFlashcards}
+              styling={styling}
             />
           )}
         </div>

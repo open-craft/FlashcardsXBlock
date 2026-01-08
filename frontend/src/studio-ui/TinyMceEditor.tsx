@@ -48,30 +48,49 @@ import 'tinymce/skins/ui/oxide/content';
 
 interface TinyMceEditorProps {
   value: string;
+  styling: FlashcardStyling;
   onChange: (value: string) => void;
 }
 
-function TinyMceEditor({ value, onChange }: TinyMceEditorProps) {
+function TinyMceEditor({ value, styling, onChange }: TinyMceEditorProps) {
+  const fontSize = styling.fontSize || '16px';
+  const textColor = styling.textColor || '#212529';
+  const backgroundColor = styling.backgroundColor || '#ffffff';
+  const borderColor = styling.borderColor || '#dee2e6';
+  const contentStyle = `
+    body {
+      font-size: ${fontSize};
+      color: ${textColor};
+      background-color: ${backgroundColor};
+    }
+    h1, h2, h3, h4, h5, h6 {
+      color: inherit;
+    }
+  `;
   return (
-    <Editor
-      licenseKey="gpl"
-      value={value}
-      onEditorChange={(newValue) => onChange(newValue)}
-      init={{
-        promotion: false,
-        menubar: false,
-        plugins: [
-          'advlist', 'autolink', 'lists', 'link', 'image',
-          'searchreplace', 'visualblocks', 'code', 'fullscreen',
-          'media', 'table', 'code', 'help',
-        ],
-        toolbar: [
-          'undo redo | blocks | bold italic forecolor | alignleft aligncenter '
-                    + 'alignright alignjustify | bullist numlist outdent indent | ',
-          'link unlink | image media | table | removeformat | code | fullscreen | help',
-        ],
-      }}
-    />
+    <div className="tinymce-wrapper" style={{ borderColor }}>
+      <Editor
+        key={`${fontSize}|${textColor}|${backgroundColor}`}
+        licenseKey="gpl"
+        value={value}
+        onEditorChange={(newValue) => onChange(newValue)}
+        init={{
+          promotion: false,
+          menubar: false,
+          plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image',
+            'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'media', 'table', 'code', 'help',
+          ],
+          toolbar: [
+            'undo redo | blocks | bold italic forecolor | alignleft aligncenter '
+                      + 'alignright alignjustify | bullist numlist outdent indent | ',
+            'link unlink | image media | table | removeformat | code | fullscreen | help',
+          ],
+          content_style: contentStyle,
+        }}
+      />
+    </div>
   );
 }
 

@@ -74,7 +74,7 @@ class FlashcardsXBlock(XBlock):
         ]
         block.content = flashcards
 
-        block.display_name = node.attrib.get("title", "Flashcards")
+        block.display_name = node.attrib.get("display_name") or node.attrib.get("title", "Flashcards")
 
         styling_attr = node.attrib.get("styling")
         if styling_attr:
@@ -92,12 +92,9 @@ class FlashcardsXBlock(XBlock):
         node.tag = self.xml_element_name()
         node.set("xblock-family", self.entry_point)
 
-        # Export display_name as the ``title`` attribute for OLX compatibility.
-        node.set("title", self.display_name)
-
         # Export remaining fields (skip content — handled as children below).
         for field_name, field in self.fields.items():
-            if field_name in ("children", "parent", "content", "display_name"):
+            if field_name in ("children", "parent", "content"):
                 continue
             if field.is_set_on(self) or field.force_export:
                 self._add_field(node, field_name, field)
@@ -115,7 +112,7 @@ class FlashcardsXBlock(XBlock):
             (
                 "FlashcardsXBlock",
                 """<vertical_demo>
-                <flashcards title="Capital cities">
+                <flashcards display_name="Capital cities">
 <flashcard front="Croatia" back="Zagreb" />
 <flashcard front="France" back="Paris" />
                 </flashcards>

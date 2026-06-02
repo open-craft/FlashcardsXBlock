@@ -1,5 +1,6 @@
 """Tests for the FlashcardsXBlock."""
 
+from lxml import etree
 from xblock.fields import ScopeIds
 from xblock.test.toy_runtime import ToyRuntime
 
@@ -28,3 +29,88 @@ def test_studio_view_json_data():
     assert "flashcards" in as_dict["json_init_args"]
     assert "styling" in as_dict["json_init_args"]
     assert "url" in as_dict["json_init_args"]
+
+
+def test_export_xml_with_list_content_succeeds():
+    """
+    Verify that exporting produces valid OLX for list content.
+
+    The export should produce ``<flashcard>`` child elements rather than
+    trying to assign the raw Python list to the XML node text.
+    """
+    scope_ids = ScopeIds("1", "flashcards", "3", "4")
+    block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
+    block.display_name = "Capitals"
+    block.content = [
+        {"front": "Croatia", "back": "Zagreb"},
+        {"front": "France", "back": "Paris"},
+    ]
+
+    node = etree.Element("root")
+    block.add_xml_to_node(node)  # must not raise
+
+    assert node.tag == "flashcards"
+    assert node.get("title") == "Capitals"
+    assert node.get("xblock-family") == "xblock.v1"
+
+    # display_name must not appear as a separate attr; title already carries it
+    assert node.get("display_name") is None
+
+    children = list(node)
+    assert len(children) == 2
+
+    assert children[0].tag == "flashcard"
+    assert children[0].get("front") == "Croatia"
+    assert children[0].get("back") == "Zagreb"
+
+    assert children[1].tag == "flashcard"
+    assert children[1].get("front") == "France"
+    assert children[1].get("back") == "Paris"
+
+
+def test_export_xml_with_empty_content():
+    """Export should also succeed when content is empty."""
+    scope_ids = ScopeIds("1", "flashcards", "3", "4")
+    block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
+    block.content = []
+
+    node = etree.Element("root")
+    block.add_xml_to_node(node)
+
+    assert node.tag == "flashcards"
+    assert list(node) == []  # no child elements
+
+
+def test_export_parse_round_trip_with_styling():
+    """
+    Export then re-parse via 3-arg calling convention recovers
+    display_name, content, and custom styling.
+    """
+    scope_ids = ScopeIds("1", "flashcards", "3", "4")
+    block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
+    block.display_name = "Styled"
+    block.content = [{"front": "Q", "back": "A"}]
+    block.styling = {
+        "fontSize": "24px",
+        "backgroundColor": "#ffffff",
+        "textColor": "#000000",
+        "borderColor": "#cccccc",
+    }
+
+    node = etree.Element("root")
+    block.add_xml_to_node(node)
+
+    # parse_xml(node, runtime, keys) — the canonical 3-arg OLX import call
+    parsed = FlashcardsXBlock.parse_xml(
+        node,
+        ToyRuntime(),
+        ScopeIds("1", "flashcards", "3", "4"),
+    )
+    assert parsed.display_name == "Styled"
+    assert parsed.content == [{"front": "Q", "back": "A"}]
+    assert parsed.styling == {
+        "fontSize": "24px",
+        "backgroundColor": "#ffffff",
+        "textColor": "#000000",
+        "borderColor": "#cccccc",
+    }

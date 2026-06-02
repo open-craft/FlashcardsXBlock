@@ -5,6 +5,9 @@ Flashcards XBlock allows the editor to add a list of questions and
 answers (separated by a semicolon) which are then displayed as flashcards.
 """
 
+import json
+
+from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Dict, List, Scope, String
@@ -56,27 +59,57 @@ class FlashcardsXBlock(XBlock):
         return frag
 
     @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator) -> XBlock:  # noqa: ANN001, ARG003
+    def parse_xml(cls, node, runtime, keys) -> XBlock:  # noqa: ANN001
         """
-        Parse the XML for an HTML block.
+        Parse the XML for a Flashcards block during OLX import.
 
-        The entire subtree under `node` is re-serialized, and set as the
-        content of the XBlock.
+        The content between the <flashcards> blocks is transformed
+        into a list of flashcard dicts and stored as ``content``.
 
-        The content between the <flashcards> blocks is being transformed
-        into a list of flashcard objects, and as such saved into the content class variable
-        (which is accessible with self.content)
+        ``styling`` and ``display_name`` are recovered from XML
+        attributes when present.
         """
         block = runtime.construct_xblock_from_class(cls, keys)
-        flashcards = []
 
         flashcards = [
-            {"front": element.attrib["front"], "back": element.attrib["back"]} for element in node.iter("flashcard")
+            {"front": element.attrib["front"], "back": element.attrib["back"]}
+            for element in node.iter("flashcard")
         ]
-
         block.content = flashcards
-        block.title = node.attrib["title"]
+
+        block.display_name = node.attrib.get("title", "Flashcards")
+
+        styling_attr = node.attrib.get("styling")
+        if styling_attr:
+            block.styling = block.fields["styling"].from_string(styling_attr)
+
         return block
+
+    def add_xml_to_node(self, node):  # noqa: ANN001
+        """
+        Serialize this XBlock to XML for OLX export.
+
+        The ``content`` list is exported as ``<flashcard>`` child elements,
+        matching the format that ``parse_xml`` expects.
+        """
+        node.tag = self.xml_element_name()
+        node.set("xblock-family", self.entry_point)
+
+        # Export display_name as the ``title`` attribute for OLX compatibility.
+        node.set("title", self.display_name)
+
+        # Export remaining fields (skip content — handled as children below).
+        for field_name, field in self.fields.items():
+            if field_name in ("children", "parent", "content", "display_name"):
+                continue
+            if field.is_set_on(self) or field.force_export:
+                self._add_field(node, field_name, field)
+
+        # Export content list as <flashcard> child elements.
+        for card in self.content:
+            child = etree.SubElement(node, "flashcard")
+            child.set("front", card.get("front", ""))
+            child.set("back", card.get("back", ""))
 
     @staticmethod
     def workbench_scenarios() -> list[tuple[str, str]]:

@@ -5,8 +5,6 @@ Flashcards XBlock allows the editor to add a list of questions and
 answers (separated by a semicolon) which are then displayed as flashcards.
 """
 
-import json
-
 from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
@@ -72,8 +70,7 @@ class FlashcardsXBlock(XBlock):
         block = runtime.construct_xblock_from_class(cls, keys)
 
         flashcards = [
-            {"front": element.attrib["front"], "back": element.attrib["back"]}
-            for element in node.iter("flashcard")
+            {"front": element.attrib["front"], "back": element.attrib["back"]} for element in node.iter("flashcard")
         ]
         block.content = flashcards
 

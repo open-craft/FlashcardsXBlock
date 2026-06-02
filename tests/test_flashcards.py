@@ -82,10 +82,7 @@ def test_export_xml_with_empty_content():
 
 
 def test_export_parse_round_trip_with_styling():
-    """
-    Export then re-parse via 3-arg calling convention recovers
-    display_name, content, and custom styling.
-    """
+    """Export then re-parse via 3-arg calling convention recovers display_name, content, and custom styling."""
     scope_ids = ScopeIds("1", "flashcards", "3", "4")
     block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
     block.display_name = "Styled"

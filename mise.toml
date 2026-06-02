@@ -27,21 +27,21 @@ run = "uv sync"
 
 [tasks.quality]
 description = "Check coding style with ruff"
-run = "tox -e quality"
+run = "uv run tox -e quality"
 
 [tasks.test]
 description = "Run tests in the current virtualenv"
 depends = ["clean"]
-run = "pytest"
+run = "uv run pytest"
 
 [tasks.test-all]
 description = "Run all tests using tox"
-run = "tox --parallel"
+run = "uv run tox --parallel"
 
 [tasks.diff-cover]
 description = "Find diff lines that need test coverage"
 depends = ["test"]
-run = "diff-cover coverage.xml"
+run = "uv run diff-cover coverage.xml"
 
 [tasks.validate]
 description = "Run tests and quality checks"
@@ -57,7 +57,7 @@ uv lock --upgrade
 
 [tasks.lint]
 description = "Format and lint all files with ruff"
-run = "ruff format && ruff check --fix"
+run = "uv run ruff format && ruff check --fix"
 
 [tasks.common-constraints]
 description = "Download and process common constraints from edx-lint"

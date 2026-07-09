@@ -70820,10 +70820,6 @@ function Sce({ value: o, styling: a, onChange: c }) {
           "undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | ",
           "link unlink | image media | table | removeformat | code | fullscreen | help"
         ],
-        // Resolve all skin/content CSS from the bundled tinymce.Resource
-        // registrations (the skin imports above) instead of runtime URL
-        // fetches computed from tinymce.baseURL, which 404 under Django
-        // static serving in Studio (Ulmo).
         skin_url: "default",
         content_style: A
       }

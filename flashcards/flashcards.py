@@ -5,11 +5,20 @@ Flashcards XBlock allows the editor to add a list of questions and
 answers (separated by a semicolon) which are then displayed as flashcards.
 """
 
+import re
+
 from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Dict, List, Scope, String
 from xblock.utils.resources import ResourceLoader
+
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _strip_html_tags(text: str) -> str:
+    """Replace HTML tags with spaces."""
+    return _HTML_TAG_RE.sub(" ", text)
 
 
 class FlashcardsXBlock(XBlock):
@@ -104,6 +113,28 @@ class FlashcardsXBlock(XBlock):
             child = etree.SubElement(node, "flashcard")
             child.set("front", card.get("front", ""))
             child.set("back", card.get("back", ""))
+
+    def index_dictionary(self) -> dict:
+        """
+        Return the block's searchable content for search.
+
+        Only the display name and each card's front (the prompt) are indexed.
+        """
+        xblock_body = super().index_dictionary()
+        # Index only the card fronts (prompts); the backs are excluded.
+        cards_text = " ".join(
+            _strip_html_tags(card.get("front") or "") for card in (self.content or []) if isinstance(card, dict)
+        )
+        index_body = {
+            "display_name": self.display_name,
+            "flashcards_content": " ".join(cards_text.split()),
+        }
+        if "content" in xblock_body:
+            xblock_body["content"].update(index_body)
+        else:
+            xblock_body["content"] = index_body
+        xblock_body["content_type"] = "Flashcards"
+        return xblock_body
 
     @staticmethod
     def workbench_scenarios() -> list[tuple[str, str]]:

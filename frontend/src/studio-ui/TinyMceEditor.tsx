@@ -11,6 +11,9 @@ import 'tinymce/themes/silver';
 import 'tinymce/icons/default';
 // Editor styles
 import 'tinymce/skins/ui/oxide/skin';
+// Content styles, including inline UI like fake cursors
+import 'tinymce/skins/content/default/content';
+import 'tinymce/skins/ui/oxide/content';
 
 // importing the plugin js.
 // if you use a plugin that is not listed here the editor will fail to load
@@ -41,10 +44,6 @@ import 'tinymce/plugins/visualchars';
 
 // importing plugin resources
 // import 'tinymce/plugins/emoticons/js/emojis';
-
-// Content styles, including inline UI like fake cursors
-import 'tinymce/skins/content/default/content';
-import 'tinymce/skins/ui/oxide/content';
 
 interface TinyMceEditorProps {
   value: string;
@@ -87,6 +86,7 @@ function TinyMceEditor({ value, styling, onChange }: TinyMceEditorProps) {
                       + 'alignright alignjustify | bullist numlist outdent indent | ',
             'link unlink | image media | table | removeformat | code | fullscreen | help',
           ],
+          skin_url: 'default',
           content_style: contentStyle,
         }}
       />

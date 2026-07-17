@@ -143,6 +143,42 @@ def test_import_display_name_trumps_legacy_title():
     assert parsed.display_name == "New Name"
 
 
+def test_index_dictionary_indexes_fronts_only():
+    """index_dictionary should index display_name and card fronts, never the backs or styling."""
+    scope_ids = ScopeIds("1", "flashcards", "3", "4")
+    block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
+    block.display_name = "Capitals"
+    block.content = [
+        {"front": "<p>Croatia</p>", "back": "Zagreb"},
+        {"front": "France", "back": "Paris"},
+    ]
+
+    index = block.index_dictionary()
+
+    assert index["content_type"] == "Flashcards"
+    assert index["content"]["display_name"] == "Capitals"
+    # HTML tags in fronts are stripped before indexing.
+    assert index["content"]["flashcards_content"] == "Croatia France"
+    # The backs (answers) must not leak into the search index.
+    flattened = str(index)
+    assert "Zagreb" not in flattened
+    assert "Paris" not in flattened
+    # Styling is not indexed.
+    assert "styling" not in index["content"]
+
+
+def test_index_dictionary_with_empty_content():
+    """index_dictionary should handle an empty card list gracefully."""
+    scope_ids = ScopeIds("1", "flashcards", "3", "4")
+    block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
+    block.content = []
+
+    index = block.index_dictionary()
+
+    assert index["content_type"] == "Flashcards"
+    assert index["content"]["flashcards_content"] == ""
+
+
 def test_import_no_title_fallback_default():
     """When neither display_name nor title is present, parse_xml defaults to "Flashcards"."""
     xml = '<flashcards><flashcard front="Q" back="A"/></flashcards>'

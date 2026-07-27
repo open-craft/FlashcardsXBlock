@@ -18,6 +18,7 @@ classifiers = [
 keywords = ["Python", "edx"]
 dependencies = [
     "XBlock",  # XBlock framework
+    "nh3",  # HTML sanitizer used for search indexing
 ]
 
 [project.urls]

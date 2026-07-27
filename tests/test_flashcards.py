@@ -5,6 +5,7 @@ from xblock.fields import ScopeIds
 from xblock.test.toy_runtime import ToyRuntime
 
 from flashcards import FlashcardsXBlock
+from flashcards.flashcards import _strip_html_tags
 
 
 def test_student_view_json_data():
@@ -189,3 +190,13 @@ def test_import_no_title_fallback_default():
         ScopeIds("1", "flashcards", "3", "4"),
     )
     assert parsed.display_name == "Flashcards"
+
+
+def test_strip_html_hardening():
+    """Script/style contents are dropped and markup edge cases are handled."""
+    assert _strip_html_tags('<script src="x.js">secret()</script>visible') == "visible"
+    assert _strip_html_tags("<style>.a{color:red}</style>styled") == "styled"
+    assert _strip_html_tags('<img alt="a > b">text') == "text"
+    assert _strip_html_tags("<p>foo</p><p>bar</p>") == "foo bar"
+    assert _strip_html_tags("see https://example.com <!-- hidden -->") == "see https://example.com"
+    assert _strip_html_tags(None) == ""

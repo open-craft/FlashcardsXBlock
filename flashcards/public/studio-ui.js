@@ -71000,17 +71000,18 @@ function _Ce({
   ] }) });
 }
 const OCe = (o, a, { title: c, flashcards: f, styling: g }) => {
-  if (!a)
+  const x = a && "jquery" in a ? a[0] : a;
+  if (!x || !(x instanceof Element))
     return;
-  const x = o.handlerUrl(a, "studio_submit");
-  Fde(a).render(
+  const k = o.handlerUrl(a, "studio_submit");
+  Fde(x).render(
     /* @__PURE__ */ zs.jsx(tt.StrictMode, { children: /* @__PURE__ */ zs.jsx(
       _Ce,
       {
         initialTitle: c,
         initialFlashcards: f,
         initialStyling: g,
-        studioSaveUrl: x,
+        studioSaveUrl: k,
         runtime: o
       }
     ) })

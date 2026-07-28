@@ -62,6 +62,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   };
 
   const handleStart = () => {
+    /* istanbul ignore next -- @preserve: defensive guard; the START button is disabled when the deck is empty */
     if (shuffledFlashcards.length === 0) {
       return;
     }
@@ -187,6 +188,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
 
   const currentFlashcard = shuffledFlashcards[currentIndex];
 
+  /* istanbul ignore next -- @preserve: defensive guard; the deck cannot be started without cards */
   if (!currentFlashcard) {
     return null;
   }

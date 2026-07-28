@@ -6334,6 +6334,7 @@ function Np({ title: e, flashcards: n, styling: t }) {
     }
     return ce;
   }, S = () => {
+    /* istanbul ignore next -- @preserve: defensive guard; the START button is disabled when the deck is empty */
     v.length !== 0 && (m(!0), s(!0), l(0), i(!1));
   }, _ = () => {
     const H = y(n);
@@ -6410,6 +6411,7 @@ function Np({ title: e, flashcards: n, styling: t }) {
       ] })
     ] });
   const ae = v[r];
+  /* istanbul ignore next -- @preserve: defensive guard; the deck cannot be started without cards */
   return ae ? /* @__PURE__ */ O.jsxs("div", { className: "flashcards_block", children: [
     /* @__PURE__ */ O.jsxs("div", { className: "fc-number", "aria-label": "Flashcard counter", children: [
       /* @__PURE__ */ O.jsx("span", { className: "current-fc", children: r + 1 }),

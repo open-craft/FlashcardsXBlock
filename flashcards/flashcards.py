@@ -7,12 +7,13 @@ answers (separated by a semicolon) which are then displayed as flashcards.
 
 import html
 
-from lxml import etree
 import nh3
+from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Dict, List, Scope, String
 from xblock.utils.resources import ResourceLoader
+
 
 def _strip_html_tags(text: str) -> str:
     """Reduce HTML to searchable plain text; script/style contents are dropped."""

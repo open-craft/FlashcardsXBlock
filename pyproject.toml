@@ -42,6 +42,7 @@ test = [
     "code-annotations",          # provides commands used by the pii_check make target
     "xblock-sdk",                # provides workbench settings for testing
     "openedx-django-pyfs",       # provides a dummy file system for testing
+    "nh3",                       # runtime dependency; needed since tox skips package install
 ]
 ci = [
     "tox",                       # Virtualenv management for tests

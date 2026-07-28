@@ -26,7 +26,7 @@ function ActionButtonLink({ className, onClick, label }:ActionButtonLinkProps) {
       <a
         href="#"
         className={`button action-primary ${className}`}
-        onClick={onClick}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(); }}
       >
         {label}
       </a>
@@ -98,7 +98,7 @@ export default function StudioUi({
               <a
                 href="#"
                 className="button cancel-button"
-                onClick={() => runtime.notify('cancel', {})}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); runtime.notify('cancel', {}); }}
               >Cancel
               </a>
             </li>

@@ -70917,7 +70917,9 @@ function Nte({ className: o, onClick: a, label: c }) {
     {
       href: "#",
       className: `button action-primary ${o}`,
-      onClick: a,
+      onClick: (f) => {
+        f.preventDefault(), f.stopPropagation(), a();
+      },
       children: c
     }
   ) });
@@ -70992,7 +70994,9 @@ function _Ce({
         {
           href: "#",
           className: "button cancel-button",
-          onClick: () => g.notify("cancel", {}),
+          onClick: (Se) => {
+            Se.preventDefault(), Se.stopPropagation(), g.notify("cancel", {});
+          },
           children: "Cancel"
         }
       ) })

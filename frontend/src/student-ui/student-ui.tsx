@@ -62,6 +62,10 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   };
 
   const handleStart = () => {
+    /* istanbul ignore next -- @preserve: defensive guard; the START button is disabled when the deck is empty */
+    if (shuffledFlashcards.length === 0) {
+      return;
+    }
     setShouldFocusCard(true);
     setIsStarted(true);
     setCurrentIndex(0);
@@ -164,6 +168,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
             className="shuffle-btn"
             onClick={handleShuffle}
             variant="outline-primary"
+            disabled={shuffledFlashcards.length === 0}
           >
             <Icon src={Shuffle} size="sm" />
             Shuffle
@@ -172,6 +177,7 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
             className="start-btn"
             onClick={handleStart}
             aria-label="Start flashcard deck"
+            disabled={shuffledFlashcards.length === 0}
           >
             START
           </Button>
@@ -181,6 +187,11 @@ function StudentUi({ title, flashcards, styling }: StudentUiProps) {
   }
 
   const currentFlashcard = shuffledFlashcards[currentIndex];
+
+  /* istanbul ignore next -- @preserve: defensive guard; the deck cannot be started without cards */
+  if (!currentFlashcard) {
+    return null;
+  }
 
   return (
     <div className="flashcards_block">

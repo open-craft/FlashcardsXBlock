@@ -5,20 +5,20 @@ Flashcards XBlock allows the editor to add a list of questions and
 answers (separated by a semicolon) which are then displayed as flashcards.
 """
 
-import re
+import html
 
+import nh3
 from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Dict, List, Scope, String
 from xblock.utils.resources import ResourceLoader
 
-_HTML_TAG_RE = re.compile(r"<[^>]+>")
-
 
 def _strip_html_tags(text: str) -> str:
-    """Replace HTML tags with spaces."""
-    return _HTML_TAG_RE.sub(" ", text)
+    """Reduce HTML to searchable plain text; script/style contents are dropped."""
+    text = (text or "").replace("<", " <")
+    return " ".join(html.unescape(nh3.clean(text, tags=set())).split())
 
 
 class FlashcardsXBlock(XBlock):

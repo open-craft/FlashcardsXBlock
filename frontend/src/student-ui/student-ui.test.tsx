@@ -180,3 +180,18 @@ describe('StudentUi', () => {
     expect(announcement).toHaveTextContent(/Question 2/i);
   });
 });
+
+describe('empty deck', () => {
+  it('disables Start and Shuffle and does not crash when there are no cards', async () => {
+    render(<StudentUi title="Empty" flashcards={[]} styling={{}} />);
+
+    const startButton = screen.getByRole('button', { name: /start flashcard deck/i });
+    const shuffleButton = screen.getByRole('button', { name: /shuffle/i });
+    expect(startButton).toBeDisabled();
+    expect(shuffleButton).toBeDisabled();
+
+    // Even if a click sneaks through, the deck must not enter a broken state.
+    await userEvent.click(startButton);
+    expect(screen.getByLabelText('Flashcard counter')).toHaveTextContent('0 / 0');
+  });
+});

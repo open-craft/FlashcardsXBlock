@@ -6,16 +6,18 @@ import './style.scss';
 // eslint-disable-next-line import/prefer-default-export
 export const renderEditor = (
   runtime: XBlockRuntime,
-  element: Element | null,
+  element: XBlockElementLike | null,
   { title, flashcards, styling }: XBlockData,
 ) => {
-  if (!element) {
+  const container = element && 'jquery' in element ? element[0] : element;
+
+  if (!container || !(container instanceof Element)) {
     return;
   }
 
   const studioSaveUrl = runtime.handlerUrl(element, 'studio_submit');
 
-  const root = createRoot(element);
+  const root = createRoot(container);
   root.render(
     <React.StrictMode>
       <StudioUi

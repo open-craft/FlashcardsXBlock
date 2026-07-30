@@ -26,7 +26,7 @@ function ActionButtonLink({ className, onClick, label }:ActionButtonLinkProps) {
       <a
         href="#"
         className={`button action-primary ${className}`}
-        onClick={onClick}
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(); }}
       >
         {label}
       </a>
@@ -58,7 +58,7 @@ export default function StudioUi({
 
   return (
     <div className="xblock-flashcards xblock--flashcards--editor editor-with-buttons">
-      <div className="d-flex flex-column" style={{ height: '375px' }}>
+      <div className="d-flex flex-column editor-layout">
         <div className="d-flex flex-column overflow-auto m-2.5">
           {step === ConfigPage.Styling && (<StylingPage styling={styling} setStyling={setStyling} />)}
           {step === ConfigPage.Editing && (
@@ -98,7 +98,7 @@ export default function StudioUi({
               <a
                 href="#"
                 className="button cancel-button"
-                onClick={() => runtime.notify('cancel', {})}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); runtime.notify('cancel', {}); }}
               >Cancel
               </a>
             </li>

@@ -70917,7 +70917,9 @@ function Nte({ className: o, onClick: a, label: c }) {
     {
       href: "#",
       className: `button action-primary ${o}`,
-      onClick: a,
+      onClick: (f) => {
+        f.preventDefault(), f.stopPropagation(), a();
+      },
       children: c
     }
   ) });
@@ -70943,7 +70945,7 @@ function _Ce({
       g.notify("save", { state: "end" });
     });
   };
-  return /* @__PURE__ */ zs.jsx("div", { className: "xblock-flashcards xblock--flashcards--editor editor-with-buttons", children: /* @__PURE__ */ zs.jsxs("div", { className: "d-flex flex-column", style: { height: "375px" }, children: [
+  return /* @__PURE__ */ zs.jsx("div", { className: "xblock-flashcards xblock--flashcards--editor editor-with-buttons", children: /* @__PURE__ */ zs.jsxs("div", { className: "d-flex flex-column editor-layout", children: [
     /* @__PURE__ */ zs.jsxs("div", { className: "d-flex flex-column overflow-auto m-2.5", children: [
       x === 0 && /* @__PURE__ */ zs.jsx(uCe, { styling: A, setStyling: N }),
       x === 1 && /* @__PURE__ */ zs.jsx(
@@ -70992,7 +70994,9 @@ function _Ce({
         {
           href: "#",
           className: "button cancel-button",
-          onClick: () => g.notify("cancel", {}),
+          onClick: (Se) => {
+            Se.preventDefault(), Se.stopPropagation(), g.notify("cancel", {});
+          },
           children: "Cancel"
         }
       ) })
@@ -71000,17 +71004,18 @@ function _Ce({
   ] }) });
 }
 const OCe = (o, a, { title: c, flashcards: f, styling: g }) => {
-  if (!a)
+  const x = a && "jquery" in a ? a[0] : a;
+  if (!x || !(x instanceof Element))
     return;
-  const x = o.handlerUrl(a, "studio_submit");
-  Fde(a).render(
+  const k = o.handlerUrl(a, "studio_submit");
+  Fde(x).render(
     /* @__PURE__ */ zs.jsx(tt.StrictMode, { children: /* @__PURE__ */ zs.jsx(
       _Ce,
       {
         initialTitle: c,
         initialFlashcards: f,
         initialStyling: g,
-        studioSaveUrl: x,
+        studioSaveUrl: k,
         runtime: o
       }
     ) })

@@ -127,3 +127,15 @@
         }
     }
 }
+
+.xblock--flashcards--editor .editor-layout {
+    height: 375px;
+}
+
+.xblock-iframe-content .xblock--flashcards--editor .editor-layout {
+    height: max(375px, calc(100vh - 40px));
+}
+
+.xblock-iframe-content .xblock--flashcards--editor .editor-layout .xblock-actions {
+    margin-top: auto;
+}

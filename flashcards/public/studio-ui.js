@@ -70945,7 +70945,7 @@ function _Ce({
       g.notify("save", { state: "end" });
     });
   };
-  return /* @__PURE__ */ zs.jsx("div", { className: "xblock-flashcards xblock--flashcards--editor editor-with-buttons", children: /* @__PURE__ */ zs.jsxs("div", { className: "d-flex flex-column", style: { height: "375px" }, children: [
+  return /* @__PURE__ */ zs.jsx("div", { className: "xblock-flashcards xblock--flashcards--editor editor-with-buttons", children: /* @__PURE__ */ zs.jsxs("div", { className: "d-flex flex-column editor-layout", children: [
     /* @__PURE__ */ zs.jsxs("div", { className: "d-flex flex-column overflow-auto m-2.5", children: [
       x === 0 && /* @__PURE__ */ zs.jsx(uCe, { styling: A, setStyling: N }),
       x === 1 && /* @__PURE__ */ zs.jsx(

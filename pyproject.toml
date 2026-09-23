@@ -4,8 +4,7 @@ version = "1.1.1"
 description = "A Flashcards XBlock for Open edX."
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.11"
-license = "MIT"
-license-files = ["LICENSE"]
+license = { text = "MIT" }
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Framework :: Django",
@@ -179,7 +178,3 @@ filterwarnings = [
     "ignore:Runtime.user_id is deprecated:DeprecationWarning",
     "ignore:'cgi' is deprecated:DeprecationWarning",
 ]
-
-[build-system]
-requires = ["setuptools>=77"]
-build-backend = "setuptools.build_meta"

@@ -180,6 +180,19 @@ def test_index_dictionary_with_empty_content():
     assert index["content"]["flashcards_content"] == ""
 
 
+def test_student_view_data():
+    """Test that the index_dictionary alias works."""
+    scope_ids = ScopeIds("1", "flashcards", "3", "4")
+    block = FlashcardsXBlock(ToyRuntime(), scope_ids=scope_ids)
+    block.display_name = "Capitals"
+    block.content = [{"front": "Croatia", "back": "Zagreb"}]
+
+    result = block.student_view_data()
+
+    assert result == block.index_dictionary()
+    assert result["content_type"] == "Flashcards"
+
+
 def test_import_no_title_fallback_default():
     """When neither display_name nor title is present, parse_xml defaults to "Flashcards"."""
     xml = '<flashcards><flashcard front="Q" back="A"/></flashcards>'

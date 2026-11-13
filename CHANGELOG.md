@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 — 2026-11-11
+
+- Add `student_view_data` alias for `index_dictionary` (needed for the "Data Bricks" indexer).
+
 ## 1.1.1 — 2026-07-31
 
 - Fix content library issues
